@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: component-config/argocd/
+spec:
+  destination:
+    namespace: argocd
+    name: in-cluster
+  project: default
+  source:
+    path: component-config/argocd
+    repoURL: git@github.com:ChapChap/ChapoCluster-argo.git
+    targetRevision: HEAD
+    plugin:
+      name: helm-remote-chart
+      env:
+        - name: HELM_REPO_NAME
+          value: argo
+        - name: HELM_REPO_URL
+          value: https://argoproj.github.io/argo-helm
+        - name: HELM_CHART_NAME
+          value: argo-cd
+        - name: HELM_CHART_VERSION
+          value: v3.26.3
+        - name: HELM_VALUES_PATH
+          value: ./helm-values.yml
+  syncPolicy:
+    automated:
+      selfHeal: true
