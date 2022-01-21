@@ -1,3 +1,7 @@
+global:
+  image:
+    repository: alinbalutoiu/argocd
+    tag: "linux-arm-v2.0.0"
 server:
   ingress:
     enabled: false
@@ -13,12 +17,12 @@ server:
       # The ArgoCD server expects requests to be encrypted.
       nginx.ingress.kubernetes.io/backend-protocol: HTTPS
 
-    hosts: {}
-      # - argocd.library.b4r.fr # <== Change this.
+    hosts:
+      - argocd.chapusot.fr
 
-    tls: {}
-      # - hosts:
-      #     - argocd.library.b4r.fr # <== Change this.
+    tls:
+      - hosts:
+          - argocd.chapusot.fr
 
         # Cert-manager astores the created certificate in this secret.
         secretName: argocd-cert
