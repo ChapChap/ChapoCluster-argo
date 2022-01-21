@@ -11,7 +11,7 @@ spec:
   project: default
   source:
     path: component-config/argocd
-    repoURL: git@github.com:ChapChap/ChapoCluster-argo.git
+    repoURL: https://github.com/ChapChap/ChapoCluster-argo.git
     targetRevision: HEAD
     plugin:
       name: helm-remote-chart

@@ -13,7 +13,7 @@ spec:
     namespace: argocd
     name: in-cluster
   source:
-    repoURL: git@github.com:ChapChap/ChapoCluster-argo.git
+    repoURL: https://github.com/ChapChap/ChapoCluster-argo.git
     path: ./argocd-config/applications/
     directory:
       recurse: true
