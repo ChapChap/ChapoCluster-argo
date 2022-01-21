@@ -1,0 +1,38 @@
+---
+# These values assume you are deploying to a local KinD cluster.
+# These values assume you are using the standard.yml values.
+# Default values: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+
+# ==============================================================================
+# Prometheus
+# ==============================================================================
+
+prometheus:
+  # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+  prometheusSpec:
+    nodeSelector:
+      padok.fr/prometheus: 'true' # Label set on single node in KinD cluster.
+
+# ==============================================================================
+# Grafana
+# Default values: https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+# ==============================================================================
+
+grafana:
+  # ⚠️ Change this 👇
+  adminPassword: prom-operator # Not changed for local cluster.
+
+  ingress:
+    enabled: false
+
+    # ⚠️ Change this 👇, specify your ingress controller's class.
+    ingressClassName: nginx # Not changed for local cluster.
+
+    annotations: null # We don't use cert-manager in our local cluster.
+
+    hosts:
+      - grafana.vcap.me # Magic hostname that resolves to 127.0.0.1
+    tls: null # We don't use TLS in our local cluster.
+
+  nodeSelector:
+    padok.fr/grafana: 'true' # Label set on single node in KinD cluster.

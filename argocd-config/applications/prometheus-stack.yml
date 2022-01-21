@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-stack
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: component-config/prometheus-stack/
+spec:
+  destination:
+    name: in-cluster
+    namespace: monitoring
+  project: default
+  source:
+    repoURL: https://github.com/ChapChap/ChapoCluster-argo.git
+    path: component-config/prometheus-stack/
+    plugin:
+      name: helm-remote-chart
+      env:
+        - name: HELM_REPO_NAME
+          value: prometheus-community
+        - name: HELM_REPO_URL
+          value: https://prometheus-community.github.io/helm-charts
+        - name: HELM_CHART_NAME
+          value: kube-prometheus-stack
+        - name: HELM_CHART_VERSION
+          value: '19.2.2'
+        - name: HELM_VALUES_PATH
+          value: ./helm-values.yml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
