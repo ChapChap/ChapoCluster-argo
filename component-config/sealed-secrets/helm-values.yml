@@ -1,6 +1,0 @@
-sealed-secrets:
-  commandArgs:
-    # Required to work around this issue:
-    # https://argo-cd.readthedocs.io/en/stable/faq/#why-are-resources-of-type-sealedsecret-stuck-in-the-progressing-state
-    # Should no longer be necessary for version 0.17+.
-    - --update-status

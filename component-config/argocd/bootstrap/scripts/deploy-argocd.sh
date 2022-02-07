@@ -43,7 +43,7 @@ kubectl create namespace argocd || true
 _info "🔑 Uploading private SSH key for GitHub access..."
 kubectl apply \
   --namespace=argocd \
-  --filename=../../component-config/argocd/credentials/sealed-secret.yml
+  --filename=../../credentials/sealed-secret.yml
 
 # Deploy Argo CD.
 _info "🚀 Deploying Argo CD..."
@@ -53,7 +53,7 @@ helm upgrade \
     --create-namespace \
     --wait \
     --version=3.26.3 \
-    --values=../../component-config/argocd/helm-values.yml \
+    --values=../../helm-values.yml \
     argocd \
     argo/argo-cd
 
@@ -61,6 +61,6 @@ helm upgrade \
 _info "⚙️ Creating the ArgoCD app of apps..."
 kubectl apply \
   --namespace=argocd \
-  --filename=../../argocd-config/applications/app-of-apps.yml
+  --filename=../../../../argocd-config/applications/app-of-apps.yml
 
 _info "👍 Deployment successful."

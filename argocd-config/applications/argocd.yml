@@ -11,21 +11,8 @@ spec:
   project: default
   source:
     path: component-config/argocd
-    repoURL: https://github.com/ChapChap/ChapoCluster-argo.git
+    repoURL: git@github.com:ChapChap/ChapoCluster-argo.git
     targetRevision: HEAD
-    plugin:
-      name: helm-remote-chart
-      env:
-        - name: HELM_REPO_NAME
-          value: argo
-        - name: HELM_REPO_URL
-          value: https://argoproj.github.io/argo-helm
-        - name: HELM_CHART_NAME
-          value: argo-cd
-        - name: HELM_CHART_VERSION
-          value: v3.26.3
-        - name: HELM_VALUES_PATH
-          value: ./helm-values.yml
   syncPolicy:
     automated:
       selfHeal: true
