@@ -17,7 +17,7 @@ function _usage() {
 }
 
 # Run script from directory where the script is stored.
-# cd "$( dirname "$0" )"
+cd "$( dirname "$0" )"
 
 # The caller must specify the Kubernetes cluster to deploy to and the
 # credentials to use.
@@ -33,7 +33,7 @@ export HELM_KUBECONTEXT="$HELM_KUBECONTEXT"
 # Connect to Helm chart repository.
 _info "📚 Connecting to Helm chart repository..."
 helm repo add argo https://argoproj.github.io/argo-helm
-# helm repo update
+helm repo update
 
 # Create a namespace for Argo CD.
 _info "📦 Creating a namespace..."
@@ -43,7 +43,7 @@ kubectl create namespace argocd || true
 _info "🔑 Uploading private SSH key for GitHub access..."
 kubectl apply \
   --namespace=argocd \
-  --filename=../../credentials/sealed-secret.yml
+  --filename=../templates/sealed-secret.yaml
 
 # Deploy Argo CD.
 _info "🚀 Deploying Argo CD..."
@@ -53,7 +53,7 @@ helm upgrade \
     --create-namespace \
     --wait \
     --version=3.26.3 \
-    --values=../../helm-values.yml \
+    --values=../values.yaml \
     argocd \
     argo/argo-cd
 
@@ -61,6 +61,6 @@ helm upgrade \
 _info "⚙️ Creating the ArgoCD app of apps..."
 kubectl apply \
   --namespace=argocd \
-  --filename=../../../../argocd-config/applications/app-of-apps.yml
+  --filename=../../../../argocd-config/applications/app-of-apps.yaml
 
 _info "👍 Deployment successful."
