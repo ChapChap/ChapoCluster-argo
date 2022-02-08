@@ -1,58 +1,21 @@
-global:
-  image:
-    repository: alinbalutoiu/argocd
-    tag: "linux-arm-v2.0.0"
-server:
-  ingress:
-    enabled: false
+---
+# Default values: https://github.com/argoproj/argo-helm/blob/master/charts/argo-cd/values.yaml
+argo-cd:
+  global:
+    image:
+      repository: alinbalutoiu/argocd
+  server:
+    ingress:
+      enabled: false
+      ingressClassName: nginx
 
-    # The NGINX ingress controller uses this class by default.
-    ingressClassName: nginx # <== Change this if necessary.
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt
+        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
 
-    annotations:
-      # cert-manager will use this issuer to generate a certificate for this
-      # ingress.
-      cert-manager.io/cluster-issuer: letsencrypt
-
-      # The ArgoCD server expects requests to be encrypted.
-      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-
-    hosts:
-      - argocd.chapusot.fr
-
-    tls:
-      - hosts:
-          - argocd.chapusot.fr
-
-        # Cert-manager astores the created certificate in this secret.
-        secretName: argocd-cert
-
-  # ArgoCD configuration
-  # Reference: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
-  #
-  # We need a plugin to use a helm chart stored in one repository with values
-  # stored in a different repository.
-  config:
-    configManagementPlugins: |
-      # Use this plugin to render a chart stored in a remote repository.
-      # Paths must be relative to the application's spec.source.path.
-      - name: helm-remote-chart
-        init:
-          command: [bash, -c]
-          args:
-            - |
-              helm repo add $HELM_REPO_NAME $HELM_REPO_URL
-              helm repo update
-        generate:
-          command: [bash, -c]
-          args:
-            - |
-              helm template \
-              --namespace=$ARGOCD_APP_NAMESPACE \
-              --create-namespace \
-              --values=$HELM_VALUES_PATH \
-              --include-crds \
-              $ARGOCD_APP_NAME \
-              $HELM_REPO_NAME/$HELM_CHART_NAME \
-              --version=$HELM_CHART_VERSION \
-              $HELM_EXTRA_ARGS
+      hosts:
+        - argocd.chapusot.fr
+      tls:
+        - hosts:
+            - argocd.chapusot.fr
+          secretName: argocd-cert
